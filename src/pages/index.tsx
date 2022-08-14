@@ -1,13 +1,26 @@
 import CircularProgress from '@/components/CircularProgress'
 import React, { useState } from 'react'
+import web3 from 'web3'
 
 const inputStyles =
 	'w-full outline-none border border-slate-200 dark:border-slate-700 bg-transparent px-5 py-2.5 rounded-lg focus:border-blue-600 duration-150'
-export default function App() {
-	const [isLoading, setIsLoading] = useState(false)
 
+export default function App() {
+
+	const web3 = new Web3();  // 
+	const [isLoading, setIsLoading] = useState(false)
 	const [inputField, setInputField] = useState('')
 	const [output, setOutput] = useState('')
+	
+	const formatInputValue = () => {
+		return (JSON.parse('{"t":"address","v":"' + {inputField} + '"}'))
+		//
+	}
+
+	//newHash = keccak256(inputValue) - (inputValue + nonce)
+	const newHash = () => {
+		web3.utils.soliditySha3(formatInputValue());
+	  }
 
 	const onSubmitHandler = (e: React.FormEvent) => {
 		e.preventDefault()
@@ -17,9 +30,10 @@ export default function App() {
 		setTimeout(() => {
 			setIsLoading(false)
 
-			setOutput('525feed5577ede78e3777653dd6f30f484e32eba8c4b944dda0b77039631d759 5')
+			setOutput(newHash())//'525feed5577ede78e3777653dd6f30f484e32eba8c4b944dda0b77039631d759 5'
 		}, 1500)
 	}
+
 	return (
 		<div className="flex justify-center items-center flex-col min-h-screen">
 			<div className="border border-slate-200 dark:border-slate-700 rounded-xl bg-white dark:bg-slate-900 shadow-md overflow-hidden">
@@ -36,7 +50,7 @@ export default function App() {
 							value={inputField}
 							onChange={e => setInputField(e.target.value)}
 						/>
-						<button
+						<button 
 							type="submit"
 							className="text-white shrink-0 bg-blue-600 hover:bg-blue-700 focus:outline-none font-medium rounded-lg text-sm w-full sm:w-auto px-7 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 "
 						>
